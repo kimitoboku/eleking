@@ -11,7 +11,7 @@ $ git clone https://github.com/tldr-pages/tldr.git
 
 * Useage
 #+BEGIN_SRC text 
-$ tldr tar
+$ eleking tar
 tar
  Archiving utility.
  Optional compression with gzip / bzip.
