@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/codegangsta/cli"
-	"github.com/kimitoboku/tldr/tldr"
+	"github.com/kimitoboku/eleking/tldr"
 )
 
 const (
-	Version = "0.0.2"
+	Version = "0.0.3"
 )
 
 var (
@@ -30,6 +30,21 @@ func fileExist(path string) bool {
 	return err == nil
 }
 
+func printCommandList() {
+	for _, doc := range docs {
+		fmt.Println(doc)
+		files, err := ioutil.ReadDir(doc)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+		for _, file := range files {
+			if !file.IsDir() {
+				fmt.Println("  " + file.Name()[:len(file.Name())-3])
+			}
+		}
+	}
+}
+
 func tldrPrint(cmd string) {
 	var cmdDoc string
 	for _, doc := range docs {
@@ -38,7 +53,9 @@ func tldrPrint(cmd string) {
 			break
 		}
 	}
-	if strings.Compare(cmdDoc, "") == 0 {
+	if strings.Compare(cmd, "list") == 0 {
+		printCommandList()
+	} else if strings.Compare(cmdDoc, "") == 0 {
 		fmt.Println("Command Not Found")
 	} else {
 		fmt.Print(cmdDoc)
@@ -69,8 +86,8 @@ func init() {
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "TL;DR"
-	app.Usage = "tldr <command>"
+	app.Name = "eleking"
+	app.Usage = "eleking <command>"
 	app.Version = Version
 	app.Action = func(c *cli.Context) {
 		tldrPrint(c.Args().First())

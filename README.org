@@ -1,8 +1,8 @@
-* TLDR
+* eleking
 This is a client for [[https://github.com/tldr-pages/tldr][tldr]].
 * Install
 #+BEGIN_SRC text 
-$ go get github.com/kimitoboku/tldr
+$ go get github.com/kimitoboku/eleking
 $ cd $HOME/.config
 $ mkdir tldr
 $ cd tldr
