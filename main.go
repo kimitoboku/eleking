@@ -92,5 +92,9 @@ func main() {
 	app.Action = func(c *cli.Context) {
 		tldrPrint(c.Args().First())
 	}
-	app.Run(os.Args)
+
+	err := app.Run(os.Args)
+	if err != nil {
+		panic(err.Error())
+	}
 }
