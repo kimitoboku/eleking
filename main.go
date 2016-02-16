@@ -12,13 +12,14 @@ import (
 )
 
 const (
-	Version = "0.0.3"
+	Version = "0.0.4"
 )
 
 var (
-	platform string
-	path     string
-	docs     []string
+	platform   string
+	path       string
+	docs       []string
+	existConfg bool
 )
 
 type Config struct {
@@ -62,26 +63,36 @@ func tldrPrint(cmd string) {
 	}
 }
 
+func tldrPrintRemote(cmd string) {
+	var cmdDoc string
+	plist := []string{"common", "linux"}
+	for _, pl := range plist {
+		cmdDoc = tldr.HttpGetMd(pl, cmd)
+		if strings.Compare(cmd, "") != 0 {
+			break
+		}
+	}
+
+	if strings.Compare(cmdDoc, "") == 0 {
+		fmt.Println("Command Not Found")
+	} else {
+		fmt.Print(cmdDoc)
+	}
+}
+
 func init() {
 	var data Config
 	jsonFile, err := ioutil.ReadFile(os.Getenv("HOME") + "/.config/tldr/config.json")
 	if err != nil {
-		fmt.Println(err.Error())
-		content := []byte("{\n\"documetns\": [\"" + os.Getenv("HOME") + "/.config/tldr/tldr/pages/common\", \"" + os.Getenv("HOME") + "/.config/tldr/tldr/pages/linux\"]\n}")
-		err = ioutil.WriteFile(os.Getenv("HOME")+"/.config/tldr/config.json", content, os.ModePerm)
+		existConfg = false
+	} else {
+		existConfg = true
+		err = json.Unmarshal(jsonFile, &data)
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
 		}
-		jsonFile, err = ioutil.ReadFile(os.Getenv("HOME") + "/.config/tldr/config.json")
-		if err != nil {
-			panic(err)
-		}
+		docs = data.Documetns
 	}
-	err = json.Unmarshal(jsonFile, &data)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	docs = data.Documetns
 }
 
 func main() {
@@ -90,7 +101,11 @@ func main() {
 	app.Usage = "eleking <command>"
 	app.Version = Version
 	app.Action = func(c *cli.Context) {
-		tldrPrint(c.Args().First())
+		if existConfg {
+			tldrPrint(c.Args().First())
+		} else {
+			tldrPrintRemote(c.Args().First())
+		}
 	}
 
 	err := app.Run(os.Args)

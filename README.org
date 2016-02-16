@@ -3,15 +3,12 @@ This is a client for [[https://github.com/tldr-pages/tldr][tldr]].
 * Install
 #+BEGIN_SRC text 
 $ go get github.com/kimitoboku/eleking
-$ cd $HOME/.config
-$ mkdir tldr
-$ cd tldr
-$ git clone https://github.com/tldr-pages/tldr.git
 #+END_SRC
 
 * Useage
 #+BEGIN_SRC text 
 $ eleking tar
+https://raw.github.com/tldr-pages/tldr/master/pages/common/tar.md
 tar
  Archiving utility.
  Optional compression with gzip / bzip.
@@ -38,9 +35,13 @@ tar
 
 #+END_SRC
 
-
-* TO DO
-** DONE format sample code.
-CLOSED: [2016-02-09 火 15:47]
-** TODO Create init Command
-clone or pull tld repo
+* In local useage
+#+BEGIN_SRC text
+$ mkdir $HOME/.config/tldr
+$ cd $_
+$ git clone https://github.com/tldr-pages/tldr.git
+$ vim config.json
+{
+    "Documetns": ["dir/md/path", "/home/example/.config/tldr/tldr/pages/linux"]
+}
+#+END_SRC

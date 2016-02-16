@@ -4,9 +4,49 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"strings"
 )
+
+func HttpGetMd(platform, cmd string) (output string) {
+	resp, err := http.Get("https://raw.github.com/tldr-pages/tldr/master/pages/" + platform + "/" + cmd + ".md")
+
+	if err != nil {
+		return ""
+	}
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+
+	output += "https://raw.github.com/tldr-pages/tldr/master/pages/" + platform + "/" + cmd + ".md\n"
+	reader := bufio.NewReaderSize(resp.Body, 4096)
+	for {
+		line, _, err := reader.ReadLine()
+		text := string(line)
+		if len(text) == 0 {
+		} else if strings.HasPrefix(text, "#") {
+			output += backGreenPrint(text[2:]) + "\n"
+		} else if strings.HasPrefix(text, ">") {
+			output += " " + readPrint(text[2:]) + "\n"
+		} else if strings.HasPrefix(text, "-") {
+			output += " " + whitePrint(text[2:]) + "\n"
+		} else if strings.HasPrefix(text, "`") {
+			output += "  " + codeHightLight(text[1:len(text)-1]) + "\n"
+			output += "\n"
+		} else {
+			output += whitePrint(text) + "\n"
+		}
+
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			panic(err)
+		}
+	}
+
+	return output
+}
 
 func GenPath(tldrpath, cmd string) (path string) {
 	path += tldrpath + "/" + cmd + ".md"
