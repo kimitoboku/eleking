@@ -65,7 +65,7 @@ func tldrPrint(cmd string) {
 
 func tldrPrintRemote(cmd string) {
 	var cmdDoc string
-	plist := []string{"common", "linux"}
+	plist := []string{"common", "linux", "osx", "sunos"}
 	for _, pl := range plist {
 		cmdDoc = tldr.HttpGetMd(pl, cmd)
 		if strings.Compare(cmdDoc, "") != 0 {
