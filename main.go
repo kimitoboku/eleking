@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	Version = "0.0.4"
+	Version = "0.0.5"
 )
 
 var (
@@ -57,7 +57,7 @@ func tldrPrint(cmd string) {
 	if strings.Compare(cmd, "list") == 0 {
 		printCommandList()
 	} else if strings.Compare(cmdDoc, "") == 0 {
-		fmt.Println("Command Not Found")
+		tldrPrintRemote(cmd)
 	} else {
 		fmt.Print(cmdDoc)
 	}
@@ -68,7 +68,7 @@ func tldrPrintRemote(cmd string) {
 	plist := []string{"common", "linux"}
 	for _, pl := range plist {
 		cmdDoc = tldr.HttpGetMd(pl, cmd)
-		if strings.Compare(cmd, "") != 0 {
+		if strings.Compare(cmdDoc, "") != 0 {
 			break
 		}
 	}

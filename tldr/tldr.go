@@ -15,8 +15,13 @@ func HttpGetMd(platform, cmd string) (output string) {
 	if err != nil {
 		return ""
 	}
+
 	if resp != nil {
 		defer resp.Body.Close()
+	}
+
+	if resp.StatusCode >= 300 || resp.StatusCode < 200 {
+		return ""
 	}
 
 	output += "https://raw.github.com/tldr-pages/tldr/master/pages/" + platform + "/" + cmd + ".md\n"
